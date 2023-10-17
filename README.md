@@ -24,7 +24,7 @@ sh c2r.sh
 To train C2R on MNIST-75sp dataset:
 
 ```python
-# cd sst_codes
+# cd mnist_codes
 sh c2r.sh
 ```
 
