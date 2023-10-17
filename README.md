@@ -8,20 +8,20 @@ Official implementation of "Cooperative Classification and Rationalization for G
 
 ## How to run C2R?
 
-To train $C2R$ on OGBG dataset:
+To train C2R on OGBG dataset:
 
 ```python
 sh c2r.sh
 ```
 
-To train $C2R$ on Spurious-Motif dataset:
+To train C2R on Spurious-Motif dataset:
 
 ```python
 # cd spmotif_codes
 sh c2r.sh
 ```
 
-To train $C2R$ on MNIST-75sp dataset:
+To train C2R on MNIST-75sp dataset:
 
 ```python
 # cd sst_codes
