@@ -4,7 +4,7 @@ python spmotif_C2R.py \
   --by_default \
   --gnn=gin \
   --device=4 \
-  --trails=1 \
+  --trails=5 \
   --bias=0.9 \
   --date=0930 \
 
