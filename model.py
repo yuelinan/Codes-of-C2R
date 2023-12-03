@@ -7,6 +7,7 @@ from conv import GNN_node, GNN_node_Virtualnode
 import numpy as np
 from torch_geometric.nn import ARMAConv
 from torch_geometric.nn import global_add_pool, global_mean_pool, global_max_pool, GlobalAttention, Set2Set
+from torch_geometric.nn import global_mean_pool
 nn_act = torch.nn.ReLU()
 F_act = F.relu
 
