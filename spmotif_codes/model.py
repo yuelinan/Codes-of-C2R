@@ -54,14 +54,15 @@ class SPMotifNet_GNN(torch.nn.Module):
         batched_data.edge_attr = batched_data.edge_attr.long()
         batched_data.x = self.node_enoder(batched_data.x)
         
-
+        
         h_node = self.graph_encoder(batched_data)
         
 
         batch = batched_data.batch
         size = batch[-1].item() + 1 
 
-        h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
+        h_out = global_mean_pool(  h_node, batched_data.batch)
+        # h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
         
 
         # h_graph = self.pool(h_node, batched_data.batch)
@@ -78,8 +79,8 @@ class SPMotifNet_GNN(torch.nn.Module):
         h_node = self.graph_encoder(batched_data)
         batch = batched_data.batch
         size = batch[-1].item() + 1 
-
-        h_r = scatter_add( h_node, batch, dim=0, dim_size=size)
+        h_r = global_mean_pool(  h_node, batch)
+        # h_r = scatter_add( h_node, batch, dim=0, dim_size=size)
         pred_rem = self.predictor(h_r)
         return pred_rem 
 
@@ -92,8 +93,8 @@ class SPMotifNet_GNN(torch.nn.Module):
         h_node = self.graph_encoder(batched_data)
         batch = batched_data.batch
         size = batch[-1].item() + 1 
-
-        h_r = scatter_add( h_node, batch, dim=0, dim_size=size)
+        h_r = global_mean_pool(  h_node, batch)
+        # h_r = scatter_add( h_node, batch, dim=0, dim_size=size)
         return h_r 
 
 
@@ -159,7 +160,8 @@ class Graph_C2R(torch.nn.Module):
             ##  GNN
             batch = batched_data.batch
             size = batch[-1].item() + 1 
-            h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
+            h_out = global_mean_pool(  h_node, batch)
+            # h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
             pred_gnn = self.predictor(h_out)
 
             output = {'pred_gnn': pred_gnn, 'pred_rem': pred_rem, 'loss_reg':loss_reg}
@@ -171,7 +173,8 @@ class Graph_C2R(torch.nn.Module):
             h_node = self.graph_encoder(batched_data)
             batch = batched_data.batch
             size = batch[-1].item() + 1 
-            h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
+            h_out = global_mean_pool(  h_node, batch)
+            # h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
             ##  cycle loss
             ##  sample env id 
             env = torch.matmul(cluster_one_hot,cluster_centers)
@@ -263,10 +266,10 @@ class separator_gum(torch.nn.Module):
 
         gate = gate[:,-1].unsqueeze(-1)
 
-        
-        h_out = scatter_add(gate * h_node, batch, dim=0, dim_size=size)
-        
-        c_out = scatter_add((1 - gate) * h_node, batch, dim=0, dim_size=size)
+        h_out = global_mean_pool(gate * h_node, batch)
+        # h_out = scatter_add(gate * h_node, batch, dim=0, dim_size=size)
+        c_out = global_mean_pool((1 - gate) * h_node, batch)
+        # c_out = scatter_add((1 - gate) * h_node, batch, dim=0, dim_size=size)
         
         r_node_num = scatter_add(gate, batch, dim=0, dim_size=size)
         
