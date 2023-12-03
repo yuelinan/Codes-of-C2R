@@ -7,6 +7,7 @@ from conv import GNN_node, GNN_node_Virtualnode
 import numpy as np
 from torch_geometric.nn import ARMAConv
 from torch_geometric.nn import global_add_pool, global_mean_pool, global_max_pool, GlobalAttention, Set2Set
+from torch_geometric.nn import global_mean_pool
 import copy
 import random
 nn_act = torch.nn.ReLU()
@@ -83,7 +84,8 @@ class Graph_C2R(torch.nn.Module):
             ##  GNN
             batch = batched_data.batch
             size = batch[-1].item() + 1 
-            h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
+            h_out = global_mean_pool(  h_node, batch)
+            # h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
             pred_gnn = self.predictor(h_out)
 
             output = {'pred_gnn': pred_gnn, 'pred_rem': pred_rem, 'loss_reg':loss_reg}
@@ -97,7 +99,8 @@ class Graph_C2R(torch.nn.Module):
             h_node = self.graph_encoder(batched_data)
             batch = batched_data.batch
             size = batch[-1].item() + 1 
-            h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
+            h_out = global_mean_pool(  h_node, batch)
+            # h_out = scatter_add( h_node, batch, dim=0, dim_size=size)
             ##  cycle loss
             ##  sample env id 
             env = torch.matmul(cluster_one_hot,cluster_centers)
@@ -185,10 +188,10 @@ class separator_gum(torch.nn.Module):
         gate = F.gumbel_softmax(gate,hard=False,dim=-1)
 
         gate = gate[:,-1].unsqueeze(-1)
-
-        h_out = scatter_add(gate * h_node, batch, dim=0, dim_size=size)
-
-        c_out = scatter_add((1 - gate) * h_node, batch, dim=0, dim_size=size)
+        h_out = global_mean_pool(gate * h_node, batch)
+        # h_out = scatter_add(gate * h_node, batch, dim=0, dim_size=size)
+        c_out = global_mean_pool((1 - gate) * h_node, batch)
+        # c_out = scatter_add((1 - gate) * h_node, batch, dim=0, dim_size=size)
 
         r_node_num = scatter_add(gate, batch, dim=0, dim_size=size)
         
