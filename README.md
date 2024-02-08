@@ -1,4 +1,4 @@
-Official implementation of "Cooperative Classification and Rationalization for Graph Generalization".
+Official implementation of WWW 2024 paper "Cooperative Classification and Rationalization for Graph Generalization".
 
 ## Data download
 - Spurious-Motif: this dataset can be generated via `spmotif_gen/spmotif.ipynb` in [DIR](https://github.com/Wuyxin/DIR-GNN/tree/main). 
