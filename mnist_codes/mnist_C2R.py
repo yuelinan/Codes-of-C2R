@@ -41,7 +41,8 @@ def main(args):
     
     datadir = './data/'
 
-    n_train_data, n_val_data = 20000, 5000
+    # n_train_data, n_val_data = 20000, 5000
+    n_train_data, n_val_data = 5000, 1000
     train_val = MNIST75sp(osp.join(datadir, 'mnistsp/'), mode='train')
     perm_idx = torch.randperm(len(train_val), generator=torch.Generator().manual_seed(0))
     train_val = train_val[perm_idx]
@@ -49,7 +50,8 @@ def main(args):
     test_dataset = MNIST75sp(osp.join(datadir, 'mnistsp/'), mode='test')
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
     valid_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False)
+    # test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False)
+    test_loader = DataLoader(test_dataset[0:1000], batch_size=args.batch_size, shuffle=False)
     n_test_data = float(len(test_loader.dataset))
 
     color_noises = torch.load(osp.join(datadir, 'mnistsp/raw/mnist_75sp_color_noise.pt')).view(-1,3)
