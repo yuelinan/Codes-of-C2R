@@ -20,7 +20,7 @@ class Graph_C2R(torch.nn.Module):
             num_tasks (int): number of labels to be predicted
         '''
 
-        super(Graph_WWW_Gumbel, self).__init__()
+        super(Graph_C2R, self).__init__()
 
         self.num_layer = num_layer
         self.drop_ratio = drop_ratio
