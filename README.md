@@ -28,4 +28,13 @@ To train C2R on MNIST-75sp dataset:
 sh c2r.sh
 ```
 
-
+## Citation
+```
+@inproceedings{yue2024cooperative,
+  title={Cooperative Classification and Rationalization for Graph Generalization},
+  author={Yue, Linan and Liu, Qi and Liu, Ye and Gao, Weibo and Yao, Fangzhou and Li, Wenfeng},
+  booktitle={Proceedings of the ACM Web Conference},
+  volume={2024},
+  year={2024}
+}
+```
