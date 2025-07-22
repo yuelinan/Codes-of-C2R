@@ -247,7 +247,38 @@ def init_weights(net, init_type='normal', init_gain=0.02):
     print('initialize network with %s' % init_type)
     net.apply(init_func)  # apply the initialization function <init_func>
 
+def eval_spmotif_explain(args, model, device, loader):
+    model.eval()
+    y_true = []
+    y_pred = []
+    acc = 0
+    auc_all = []
+    precision_at_5_all = []
+    for step, batch in enumerate(loader):
+        
+        batch = batch.to(device)
+        edge_index = batch.edge_index.cpu()
+        true_labels = [0 for i in range(batch.x.size(0))]
+        for index, data in enumerate(batch.edge_gt_att):
+            if data==1:
+                true_labels[edge_index[0][index]] = 1
+                true_labels[edge_index[1][index]] = 1
+                
+        if batch.x.shape[0] == 1:
+            pass
+        else:
+            with torch.no_grad():
+                pred,gate = model.eval_explain_forward(batch)
+                gate = gate.squeeze(1)
 
+                y_true.extend(true_labels)
+                y_pred.extend(gate.cpu().numpy().tolist())
+                auc_all.append(  roc_auc_score(true_labels, gate.cpu().numpy().tolist())   )
+                precision_at_5_all.append( precision_at_k(true_labels, gate.cpu().numpy().tolist() ,5)   )
+
+    # auc = roc_auc_score(y_true, y_pred)
+    return  np.mean(precision_at_5_all), np.mean(auc_all)
+    
 def set_requires_grad(nets, requires_grad=False):
     """Set requies_grad=Fasle for all the networks to avoid unnecessary computations
     Parameters:
